@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Fofoca do Bata City</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ffb6c1, #ffc0cb);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    width: 360px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    text-align: center;
+}
+h1 {
+    color: #ff1493;
+}
+input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+button {
+    background: #ff1493;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+button:hover {
+    background: #ff69b4;
+}
+.fofocas {
+    margin-top: 15px;
+    text-align: left;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.fofoca {
+    background: #ffe4ec;
+    padding: 8px;
+    border-radius: 6px;
+    margin-top: 5px;
+}
+</style>
+</head>
+<body>
+
+<div class="container" id="loginBox">
+    <h1>Entrar</h1>
+    <input type="text" id="nomeUsuario" placeholder="Digite seu nome">
+    <button onclick="entrar()">Entrar</button>
+</div>
+
+<div class="container" id="fofocaBox" style="display:none;">
+    <h1>Fofoca do Bata City</h1>
+    <input type="text" id="fofocaInput" placeholder="Fofoca do Bata City">
+    <button onclick="publicarFofoca()">Publicar fofoca</button>
+    <div class="fofocas" id="listaFofocas"></div>
+</div>
+
+<script>
+let usuario = "";
+
+function entrar() {
+    const nome = document.getElementById("nomeUsuario").value;
+    if(nome === "") {
+        alert("Digite seu nome 😎");
+        return;
+    }
+    usuario = nome;
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("fofocaBox").style.display = "block";
+    carregarFofocas();
+}
+
+function publicarFofoca() {
+    const input = document.getElementById("fofocaInput");
+    const texto = input.value;
+    if(texto === "") {
+        alert("Digite uma fofoca primeiro 😏");
+        return;
+    }
+
+    let fofocas = JSON.parse(localStorage.getItem("fofocas")) || [];
+
+    const novaFofoca = {
+        nome: usuario,
+        texto: texto
+    };
+
+    fofocas.push(novaFofoca);
+    localStorage.setItem("fofocas", JSON.stringify(fofocas));
+
+    input.value = "";
+    mostrarFofocas();
+}
+
+function carregarFofocas() {
+    mostrarFofocas();
+}
+
+function mostrarFofocas() {
+    const lista = document.getElementById("listaFofocas");
+    lista.innerHTML = "";
+
+    let fofocas = JSON.parse(localStorage.getItem("fofocas")) || [];
+
+    fofocas.forEach(f => {
+        const div = document.createElement("div");
+        div.className = "fofoca";
+        div.textContent = "🗣️ " + f.nome + ": " + f.texto;
+        lista.prepend(div);
+    });
+}
+</script>
+
+</body>
+</html>
